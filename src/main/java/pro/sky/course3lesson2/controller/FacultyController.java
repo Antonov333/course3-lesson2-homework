@@ -51,9 +51,8 @@ public class FacultyController {
     }
 
     @DeleteMapping("/delete")
-    public Long deleteUser(@RequestParam("userId") long id) {
-        final Long aLong = Long.valueOf(id);
-        return aLong;
+    public Faculty delete(@RequestParam("id") long id) {
+        return facultyService.deleteFaculty(id);
     }
 
     @GetMapping(path = "/load")

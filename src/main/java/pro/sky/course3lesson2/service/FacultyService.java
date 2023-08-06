@@ -58,5 +58,10 @@ public class FacultyService {
         return faculties;
     }
 
+    public Faculty deleteFaculty(Long id) {
+        Faculty deletedFaculty = faculties.remove(Long.valueOf(id));
+        return deletedFaculty;
+    }
+
 
 }
