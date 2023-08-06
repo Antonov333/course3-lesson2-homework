@@ -24,11 +24,38 @@ public class FacultyService {
     }
 
     public List<Faculty> getFacultiesByColor(String color) {
-        return getFaculties().stream().filter(faculty -> faculty.getColor().equals(color)).toList();
+        System.out.println("color = " + color);
+        List<Faculty> coloredByColor = faculties.values().stream().filter(faculty -> faculty.getColor().equals(color)).toList();
+        System.out.println("coloredByColor = " + coloredByColor);
+        return coloredByColor;
     }
 
-    public void createFaculty(Faculty faculty) {
-        faculties.put(Long.valueOf(faculty.getId()), faculty);
+    public Faculty createFaculty(Faculty faculty) {
+        Long id = Long.valueOf(faculty.getId());
+        faculties.put(id, faculty);
+        return faculties.get(id);
+    }
+
+    public Faculty updateFaculty(long id, Faculty faculty) {
+        return faculties.put(Long.valueOf(id), faculty);
+    }
+
+    public HashMap<Long, Faculty> loadExampleFaculties() {
+        final int one = 1, two = 2, three = 3, four = 4, five = 5, six = 6;
+        final String silver = "silver",
+                white = "white",
+                green = "green",
+                blue = "blue",
+                black = "black",
+                yellow = "yellow",
+                pink = "pink";
+
+        faculties.put(Long.valueOf(one), new Faculty(Long.valueOf(one), "Commercial Cycling", silver));
+        faculties.put(Long.valueOf(two), new Faculty(Long.valueOf(two), "Road Bicycle Racing", yellow));
+        faculties.put(Long.valueOf(three), new Faculty(Long.valueOf(three), "Mountain Bike Racing", green));
+        faculties.put(Long.valueOf(four), new Faculty(Long.valueOf(four), "Bikepacking", blue));
+
+        return faculties;
     }
 
 

@@ -1,12 +1,13 @@
 package pro.sky.course3lesson2.controller;
 
 
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pro.sky.course3lesson2.model.Faculty;
 import pro.sky.course3lesson2.service.FacultyService;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 
 @RestController
@@ -29,14 +30,34 @@ public class FacultyController {
         return facultyService.getById(facultyId);
     }
 
-    @GetMapping(path = "/{color}")
+    @GetMapping(path = "/color/{color}")
     public List<Faculty> getByColor(@PathVariable String color) {
         return facultyService.getFacultiesByColor(color);
     }
 
-    @PostMapping
-    public void createFaculty(@RequestBody Faculty faculty) {
-        facultyService.createFaculty(faculty);
+    @PostMapping()
+    public ResponseEntity<Faculty> createFaculty(@RequestBody Faculty faculty) {
+        Faculty createdFaculty = facultyService.createFaculty(faculty);
+        return ResponseEntity.ok(createdFaculty);
     }
 
+    @PutMapping
+    public ResponseEntity<Faculty> updateFaculty(@RequestBody Faculty faculty) {
+        Faculty updatedFaculty = facultyService.updateFaculty(faculty.getId(), faculty);
+        if (updatedFaculty == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(updatedFaculty);
+    }
+
+    @DeleteMapping("/delete")
+    public Long deleteUser(@RequestParam("userId") long id) {
+        final Long aLong = Long.valueOf(id);
+        return aLong;
+    }
+
+    @GetMapping(path = "/load")
+    public HashMap<Long, Faculty> load() {
+        return facultyService.loadExampleFaculties();
+    }
 }

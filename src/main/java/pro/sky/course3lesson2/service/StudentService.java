@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import pro.sky.course3lesson2.model.Student;
 
 import java.util.HashMap;
+import java.util.List;
 
 @Service
 public class StudentService {
@@ -38,6 +39,10 @@ public class StudentService {
         } else {
             return (Student) ResponseEntity.status(410);
         }
+    }
+
+    public List<Student> getByAge(int age) {
+        return students.values().stream().filter(s -> s.getAge() == age).toList();
     }
 
     private boolean checkStudentData(String name, int age) {
