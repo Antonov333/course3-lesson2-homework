@@ -53,7 +53,7 @@ public class StudentService {
 
     public HashMap<Long, Student> loadExampleStudents(int number) {
         for (int i = 0; i < number; i++) {
-            students.put(Long.valueOf(i + 1), new Student(i, randomName(), randomAge(18, 25)));
+            students.put(Long.valueOf(i + 1), new Student(i + 1, randomName(), randomAge(18, 25)));
         }
         return students;
     }
@@ -80,7 +80,10 @@ public class StudentService {
     }
 
     private boolean checkStudentData(String name, int age) {
-        return true;
+        if (!name.equals("") & name != null & age > 16) {
+            return true;
+        }
+        return false;
     }
 
 }
