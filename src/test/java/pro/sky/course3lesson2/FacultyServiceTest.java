@@ -48,6 +48,19 @@ public class FacultyServiceTest {
         assertTrue(facultyService.getFaculties().contains(testFaculty));
     }
 
+    @Test
+    public void updateFacultyTest() {
+        FacultyService facultyService = new FacultyService();
+        loadTestFaculties(facultyService);
+        Faculty f = facultyService.getById(2);
+        Faculty expectedFaculty = new Faculty(2, f.getName(), f.getColor());
+        expectedFaculty.setColor("Lemon");
+        expectedFaculty.setName("Road Cycling Racing");
+        assertNotEquals(expectedFaculty, facultyService.getById(2));
+        facultyService.updateFaculty(2, expectedFaculty);
+        assertEquals(expectedFaculty, facultyService.getById(2));
+    }
+
     private static Set<Faculty> loadTestFaculties(FacultyService facultyService) {
         final int one = 1, two = 2, three = 3, four = 4, five = 5, six = 6;
         final String silver = "silver",
