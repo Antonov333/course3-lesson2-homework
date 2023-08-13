@@ -1,7 +1,10 @@
 package pro.sky.course3lesson2.model;
 
+import org.hibernate.annotations.Entity;
+
 import java.util.Objects;
 
+@Entity
 public class Student {
 
 //    Класс Student имеет следующие поля: Long id, String name, int age

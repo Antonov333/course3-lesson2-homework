@@ -1,8 +1,12 @@
 package pro.sky.course3lesson2.model;
 
+
+import org.hibernate.annotations.Entity;
+
 import java.util.HashSet;
 import java.util.Objects;
 
+@Entity
 public class Faculty {
 
 //    Класс **Faculty** имеет следующие поля: **Long id, String name, String color.**
@@ -16,6 +20,9 @@ public class Faculty {
         this.id = id;
         this.name = name;
         this.color = color;
+    }
+
+    public Faculty() {
     }
 
     @Override
