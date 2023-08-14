@@ -71,7 +71,7 @@ public class StudentService {
     }
 
     public List<Student> selectedByAge(int age) {
-        return studentRepository.findAll().stream().filter(student -> student.getAge() == age).toList();
+        return studentRepository.findAllByAge(age);
     }
 
     private String randomName() {

@@ -27,8 +27,7 @@ public class FacultyService {
     }
 
     public List<Faculty> getFacultiesByColor(String color) {
-        List<Faculty> coloredByColor = facultyRepository.findAll().stream().filter(faculty -> faculty.getColor().equals(color)).toList();
-        return coloredByColor;
+        return facultyRepository.findAllByColor(color);
     }
 
     public Faculty createFaculty(Faculty faculty) {
