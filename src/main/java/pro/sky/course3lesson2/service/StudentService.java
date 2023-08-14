@@ -4,69 +4,74 @@ package pro.sky.course3lesson2.service;
 
 import com.thedeanda.lorem.Lorem;
 import com.thedeanda.lorem.LoremIpsum;
-import org.springframework.http.ResponseEntity;
+import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
+import pro.sky.course3lesson2.exception.StudentAlreadyExistsException;
+import pro.sky.course3lesson2.exception.StudentNotFoundException;
 import pro.sky.course3lesson2.model.Student;
+import pro.sky.course3lesson2.repository.StudentRepository;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
 @Service
 public class StudentService {
 
-    private HashMap<Long, Student> students = new HashMap<>();
+    private final StudentRepository studentRepository;
 
-    public StudentService(HashMap<Long, Student> students) {
-        this.students = students;
+    public StudentService(StudentRepository studentRepository) {
+        this.studentRepository = studentRepository;
     }
 
     //    CRUD
 
     public Student createStudent(Student student) {
-        Student returnStudent = students.put(Long.valueOf(student.getId()), student);
-        return returnStudent;
+        Example<Student> studentExample = Example.of(student);
+        if (studentRepository.exists(studentExample)) {
+            throw new StudentAlreadyExistsException();
+        }
+        return studentRepository.save(student);
     }
 
     public Student readStudent(long id) {
-        return students.get(Long.valueOf(id));
+        return studentRepository.findById(Long.valueOf(id)).orElseThrow(StudentNotFoundException::new);
     }
 
     public Student updateStudent(long id, String newName, int newAge) {
-        if (checkStudentData(newName, newAge)) {
-            Long key = Long.valueOf(id);
-            students.get(key).setName(newName);
-            students.get(key).setAge(newAge);
-            return students.get(key);
-        } else {
-            return (Student) ResponseEntity.status(410);
+        Long idLong = Long.valueOf(id);
+        Student existingStudent = studentRepository.findById(idLong).orElseThrow(StudentNotFoundException::new);
+        if (newName != null) {
+            existingStudent.setName(newName);
         }
+        if (newAge > 15) {
+            existingStudent.setAge(newAge);
+        }
+        return studentRepository.save(existingStudent);
     }
 
     public List<Student> getByAge(int age) {
-        return students.values().stream().filter(s -> s.getAge() == age).toList();
+        return studentRepository.findAll().stream().filter(s -> s.getAge() == age).toList();
     }
 
-    public HashMap<Long, Student> getStudents() {
-        return students;
+    public List<Student> getStudents() {
+        return studentRepository.findAll();
     }
 
-    public HashMap<Long, Student> loadExampleStudents(int number) {
+    public List<Student> loadExampleStudents(int number) {
         for (int i = 0; i < number; i++) {
-            students.put(Long.valueOf(i + 1), new Student(i + 1, randomName(), randomAge(18, 25)));
+            studentRepository.save(new Student(i + 1, randomName(), randomAge(18, 25)));
         }
-        return students;
+        return studentRepository.findAll();
     }
 
     public Student sendDown(Student student) {
-        if (students.remove(student.getId(), student)) {
-            return student;
-        }
-        return null;
+        Student expelledStudent = student;
+        studentRepository.delete(student);
+        return expelledStudent;
     }
 
     public List<Student> selectedByAge(int age) {
-        return students.values().stream().filter(student -> student.getAge() == age).toList();
+        return studentRepository.findAll().stream().filter(student -> student.getAge() == age).toList();
     }
 
     private String randomName() {
@@ -80,10 +85,7 @@ public class StudentService {
     }
 
     private boolean checkStudentData(String name, int age) {
-        if (!name.equals("") & name != null & age > 16) {
-            return true;
-        }
-        return false;
+        return !name.equals("") & name != null & age > 16;
     }
 
 }

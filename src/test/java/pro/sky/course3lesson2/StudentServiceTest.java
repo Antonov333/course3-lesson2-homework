@@ -8,7 +8,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 public class StudentServiceTest {
 
@@ -22,7 +23,7 @@ public class StudentServiceTest {
 
     @Test
     public void createStudentTest() {
-        StudentService studentService = new StudentService(new HashMap<>());
+        StudentService studentService = new StudentService(new HashMap<>(), studentRepository);
         loadTestStudents(studentService);
         Student newStudent = new Student(6, "Cary", 18);
         studentService.createStudent(newStudent);
@@ -31,7 +32,7 @@ public class StudentServiceTest {
 
     @Test
     public void readStudentTest() {
-        StudentService studentService = new StudentService(new HashMap<>());
+        StudentService studentService = new StudentService(new HashMap<>(), studentRepository);
         loadTestStudents(studentService);
         Student expectedStudent = new Student(3, "Coy", 21);
         assertEquals(expectedStudent, studentService.readStudent(3));
@@ -39,7 +40,7 @@ public class StudentServiceTest {
 
     @Test
     public void updateStudentTest() {
-        StudentService studentService = new StudentService(new HashMap<>());
+        StudentService studentService = new StudentService(new HashMap<>(), studentRepository);
         loadTestStudents(studentService);
         String simon = "Simon";
         int age26 = 26;
@@ -52,7 +53,7 @@ public class StudentServiceTest {
 
     @Test
     public void getByAgeTest() {
-        StudentService studentService = new StudentService(new HashMap<>());
+        StudentService studentService = new StudentService(new HashMap<>(), studentRepository);
         loadTestStudents(studentService);
         List<Student> expectedList = new ArrayList<>();
         expectedList.add(new Student(3, "Coy", 21));
@@ -61,7 +62,7 @@ public class StudentServiceTest {
 
     @Test
     public void getStudentsTest() {
-        StudentService studentService = new StudentService(new HashMap<>());
+        StudentService studentService = new StudentService(new HashMap<>(), studentRepository);
         loadTestStudents(studentService);
         HashMap<Long, Student> expected = new HashMap<>();
         expected.put(1L, new Student(1, "Nadia", 19));
@@ -74,7 +75,7 @@ public class StudentServiceTest {
 
     @Test
     public void sendDownTest() {
-        StudentService studentService = new StudentService(new HashMap<>());
+        StudentService studentService = new StudentService(new HashMap<>(), studentRepository);
         loadTestStudents(studentService);
         Student student = new Student(5, "Elmer", 18);
         assertEquals(student, studentService.readStudent(5));
@@ -85,7 +86,7 @@ public class StudentServiceTest {
 
     @Test
     public void selectedByAgeTest() {
-        StudentService studentService = new StudentService(new HashMap<>());
+        StudentService studentService = new StudentService(new HashMap<>(), studentRepository);
         loadTestStudents(studentService);
         List<Student> expectedList = new ArrayList<>();
         expectedList.add(new Student(3, "Coy", 21));

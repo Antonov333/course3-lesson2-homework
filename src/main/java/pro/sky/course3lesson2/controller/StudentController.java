@@ -4,7 +4,6 @@ import org.springframework.web.bind.annotation.*;
 import pro.sky.course3lesson2.model.Student;
 import pro.sky.course3lesson2.service.StudentService;
 
-import java.util.HashMap;
 import java.util.List;
 
 @RestController
@@ -18,12 +17,12 @@ public class StudentController {
     }
 
     @GetMapping
-    public HashMap<Long, Student> viewStudents() {
+    public List<Student> viewStudents() {
         return students.getStudents();
     }
 
     @GetMapping(path = "/load/{number}")
-    public HashMap<Long, Student> loadStudents(@PathVariable int number) {
+    public List<Student> loadStudents(@PathVariable int number) {
         return students.loadExampleStudents(number);
     }
 

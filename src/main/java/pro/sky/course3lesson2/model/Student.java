@@ -1,17 +1,22 @@
 package pro.sky.course3lesson2.model;
 
-import org.hibernate.annotations.Entity;
-
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import java.util.Objects;
 
 @Entity
 public class Student {
 
-//    Класс Student имеет следующие поля: Long id, String name, int age
-
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     private String name;
     int age;
+
+    public Student() {
+    }
 
     public Student(long id, String name, int age) {
         this.id = id;

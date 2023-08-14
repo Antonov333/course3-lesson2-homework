@@ -12,7 +12,7 @@ public class FacultyServiceTest {
 
     @Test
     public void getFacultiesTest() {
-        FacultyService facultyService = new FacultyService();
+        FacultyService facultyService = new FacultyService(facultyRepository);
         Collection<Faculty> expected = loadTestFaculties(facultyService);
         Set<Faculty> expectedSet = new HashSet<>(expected);
         Collection<Faculty> actual = facultyService.getFaculties();
@@ -23,7 +23,7 @@ public class FacultyServiceTest {
 
     @Test
     public void getByIdTest() {
-        FacultyService facultyService = new FacultyService();
+        FacultyService facultyService = new FacultyService(facultyRepository);
         loadTestFaculties(facultyService);
         Faculty expected = new Faculty(Long.valueOf(3), "Mountain Bike Racing", "green");
         assertEquals(expected, facultyService.getById(3L));
@@ -33,14 +33,14 @@ public class FacultyServiceTest {
     public void getFacultiesByColorTest() {
         List<Faculty> expected = new ArrayList<>();
         expected.add(new Faculty(Long.valueOf(1), "Commercial Cycling", "silver"));
-        FacultyService facultyService = new FacultyService();
+        FacultyService facultyService = new FacultyService(facultyRepository);
         loadTestFaculties(facultyService);
         assertEquals(expected, facultyService.getFacultiesByColor("silver"));
     }
 
     @Test
     public void createFacultyTest() {
-        FacultyService facultyService = new FacultyService();
+        FacultyService facultyService = new FacultyService(facultyRepository);
         loadTestFaculties(facultyService);
         Faculty testFaculty = new Faculty(5, "Long Distance Bicycling", "blue");
         assertFalse(facultyService.getFaculties().contains(testFaculty));
@@ -50,7 +50,7 @@ public class FacultyServiceTest {
 
     @Test
     public void updateFacultyTest() {
-        FacultyService facultyService = new FacultyService();
+        FacultyService facultyService = new FacultyService(facultyRepository);
         loadTestFaculties(facultyService);
         Faculty f = facultyService.getById(2);
         Faculty expectedFaculty = new Faculty(2, f.getName(), f.getColor());

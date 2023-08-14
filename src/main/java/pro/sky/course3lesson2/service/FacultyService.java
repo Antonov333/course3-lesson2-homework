@@ -1,43 +1,49 @@
 package pro.sky.course3lesson2.service;
 
+import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
+import pro.sky.course3lesson2.exception.FacultyNotFoundException;
 import pro.sky.course3lesson2.model.Faculty;
+import pro.sky.course3lesson2.repository.FacultyRepository;
 
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 
 @Service
 public class FacultyService {
 
-    HashMap<Long, Faculty> faculties = new HashMap<>();
+    private final FacultyRepository facultyRepository;
 
-    public FacultyService() {
+    public FacultyService(FacultyRepository facultyRepository) {
+        this.facultyRepository = facultyRepository;
     }
 
-    public Collection<Faculty> getFaculties() {
-        return faculties.values();
+    public List<Faculty> getFaculties() {
+        return facultyRepository.findAll();
     }
 
     public Faculty getById(long id) {
-        return faculties.get(Long.valueOf(id));
+        return facultyRepository.findById(Long.valueOf(id)).orElseThrow(FacultyNotFoundException::new);
     }
 
     public List<Faculty> getFacultiesByColor(String color) {
-        System.out.println("color = " + color);
-        List<Faculty> coloredByColor = faculties.values().stream().filter(faculty -> faculty.getColor().equals(color)).toList();
-        System.out.println("coloredByColor = " + coloredByColor);
+        List<Faculty> coloredByColor = facultyRepository.findAll().stream().filter(faculty -> faculty.getColor().equals(color)).toList();
         return coloredByColor;
     }
 
     public Faculty createFaculty(Faculty faculty) {
-        Long id = Long.valueOf(faculty.getId());
-        faculties.put(id, faculty);
-        return faculties.get(id);
+        return facultyRepository.save(faculty);
     }
 
     public Faculty updateFaculty(long id, Faculty faculty) {
-        return faculties.put(Long.valueOf(id), faculty);
+        Faculty existingFaculty = facultyRepository.findById(id).orElseThrow(FacultyNotFoundException::new);
+        if (faculty.getName() != null) {
+            existingFaculty.setName(faculty.getName());
+        }
+        if (faculty.getColor() != null) {
+            existingFaculty.setColor(faculty.getColor());
+        }
+        return facultyRepository.save(existingFaculty);
     }
 
     public HashMap<Long, Faculty> loadExampleFaculties() {
@@ -50,18 +56,29 @@ public class FacultyService {
                 yellow = "yellow",
                 pink = "pink";
 
-        faculties.put(Long.valueOf(one), new Faculty(Long.valueOf(one), "Commercial Cycling", silver));
-        faculties.put(Long.valueOf(two), new Faculty(Long.valueOf(two), "Road Bicycle Racing", yellow));
-        faculties.put(Long.valueOf(three), new Faculty(Long.valueOf(three), "Mountain Bike Racing", green));
-        faculties.put(Long.valueOf(four), new Faculty(Long.valueOf(four), "Bikepacking", blue));
+        facultyRepository.save(new Faculty(Long.valueOf(one), "Commercial Cycling", silver));
+        facultyRepository.save(new Faculty(Long.valueOf(two), "Road Bicycle Racing", yellow));
+        facultyRepository.save(new Faculty(Long.valueOf(three), "Mountain Bike Racing", green));
+        facultyRepository.save(new Faculty(Long.valueOf(four), "Bikepacking", blue));
 
-        return faculties;
+        HashMap<Long, Faculty> facultyHashMap = new HashMap<>();
+        facultyRepository.findAll().stream().map(faculty -> facultyHashMap.put(Long.valueOf(faculty.getId()), faculty));
+        return facultyHashMap;
     }
 
     public Faculty deleteFaculty(Long id) {
-        Faculty deletedFaculty = faculties.remove(Long.valueOf(id));
+        Faculty deletedFaculty =
+                facultyRepository.findById(id).orElseThrow(FacultyNotFoundException::new);
+        facultyRepository.deleteById(id);
         return deletedFaculty;
     }
 
+    public Faculty deleteFaculty(Faculty faculty) {
+        Example<Faculty> facultyExample = Example.of(faculty);
+        Faculty deletedFaculty =
+                facultyRepository.findOne(facultyExample).orElseThrow(FacultyNotFoundException::new);
+        facultyRepository.delete(faculty);
+        return deletedFaculty;
+    }
 
 }
